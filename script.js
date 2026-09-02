@@ -1,4 +1,3 @@
-//your code here
 const container = document.getElementById("image-container");
 const images = container.querySelectorAll("img");
 
@@ -9,8 +8,21 @@ const para = document.getElementById("para");
 
 let selectedImages = [];
 
-// Shuffle images
-function shuffleImages() {
+// Make sure buttons are hidden initially
+reset.style.display = "none";
+verify.style.display = "none";
+
+// Randomly choose which image will be duplicated
+function setupImages() {
+    const imageClasses = ["img1", "img2", "img3", "img4", "img5"];
+
+    const duplicateIndex = Math.floor(Math.random() * 5);
+    const duplicateClass = imageClasses[duplicateIndex];
+
+    images[5].className = duplicateClass;
+    images[5].dataset.image = duplicateClass;
+
+    // Shuffle all six images
     let imageArray = Array.from(images);
 
     for (let i = imageArray.length - 1; i > 0; i--) {
@@ -26,34 +38,33 @@ function shuffleImages() {
     });
 }
 
-// Select an image
+// Select image
 function selectImage(event) {
-    let image = event.target;
+    const image = event.target;
 
-    // Don't allow the same image to be selected twice
+    // Don't select the same tile twice
     if (selectedImages.includes(image)) {
         return;
     }
 
-    // Don't allow more than two selections
+    // Don't allow more than two tiles
     if (selectedImages.length >= 2) {
         return;
     }
 
     selectedImages.push(image);
-
     image.classList.add("selected");
 
     // Show Reset after first selection
     reset.style.display = "inline-block";
 
-    // Show Verify only after exactly two images
+    // Show Verify only after two selections
     if (selectedImages.length === 2) {
         verify.style.display = "inline-block";
     }
 }
 
-// Reset everything
+// Reset
 function resetGame() {
     selectedImages = [];
 
@@ -70,14 +81,14 @@ function resetGame() {
     para.textContent = "";
 }
 
-// Verify selected images
+// Verify
 function verifyImages() {
     if (selectedImages.length !== 2) {
         return;
     }
 
-    let firstImage = selectedImages[0].dataset.image;
-    let secondImage = selectedImages[1].dataset.image;
+    const firstImage = selectedImages[0].dataset.image;
+    const secondImage = selectedImages[1].dataset.image;
 
     if (firstImage === secondImage) {
         para.textContent = "You are a human. Congratulations!";
@@ -89,7 +100,7 @@ function verifyImages() {
     verify.style.display = "none";
 }
 
-// Add click event to images
+// Add image click events
 images.forEach(function(image) {
     image.addEventListener("click", selectImage);
 });
@@ -98,5 +109,5 @@ images.forEach(function(image) {
 reset.addEventListener("click", resetGame);
 verify.addEventListener("click", verifyImages);
 
-// Shuffle when page loads
-shuffleImages();
+// Start game
+setupImages();
